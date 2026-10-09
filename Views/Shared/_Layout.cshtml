@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] — Админ-панель</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="bg-dark text-white py-3 mb-4">
+        <div class="container d-flex justify-content-between align-items-center">
+            <h1 class="h4 mb-0">⚙️ Админ-панель</h1>
+            <nav>
+                <a href="/Dashboard" class="text-white me-3">Дашборд</a>
+                <a href="/Settings" class="text-white">Настройки</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="mb-3">
+            @if (IsSectionDefined("PageHeader"))
+            {
+                @await RenderSectionAsync("PageHeader")
+            }
+            else
+            {
+                <h2>Панель управления</h2>
+            }
+        </div>
+
+        @if (IsSectionDefined("Actions"))
+        {
+            <div class="mb-3">
+                @await RenderSectionAsync("Actions")
+            </div>
+        }
+
+        <main>
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top mt-5 py-3 text-muted">
+        <div class="container">
+            &copy; @DateTime.Now.Year Админ-панель
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

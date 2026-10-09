@@ -1,0 +1,89 @@
+﻿@model IEnumerable<DashboardAdmin.Models.DashboardCard>
+@using DashboardAdmin.Models
+@{
+    Layout = "_AppLayout";
+    ViewData["Title"] = "Дашборд";
+
+    // локальные переменные
+    var totalValue = Model.Sum(c => c.Value);
+    var cardCount = Model.Count();
+
+    // шаблонный делегат (доп. задание «Сложный»)
+    Func<DashboardCard, Microsoft.AspNetCore.Html.IHtmlContent> renderCard =
+        @<div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">@item.Title</h5>
+                <p class="card-text">
+                    <strong>@item.Value @item.Unit</strong> — @GetTrendLabel(item.Trend)
+                </p>
+                @if (item.Value < 0)
+                {
+                    <span class="badge bg-danger">Отрицательное значение</span>
+                }
+                <p class="text-muted small">@item.Description</p>
+            </div>
+        </div>;
+}
+
+@functions {
+    string GetTrendLabel(Trend t) => t switch
+    {
+        Trend.Up => "Рост",
+        Trend.Down => "Снижение",
+        Trend.Stable => "Стабильно",
+        _ => "—"
+    };
+
+    string GetAverage(IEnumerable<DashboardCard> cards)
+    {
+        if (!cards.Any()) return "0";
+        return cards.Average(c => c.Value).ToString("F2");
+    }
+}
+
+@* Данные за период из контроллера *@
+<!-- Админ-дашборд v1.0 -->
+
+@section PageHeader {
+    <h1>Дашборд</h1>
+    <p class="text-muted">
+        @cardCount показателей, сумма: @totalValue @ViewBag.Currency
+        <br />
+        <small>Период: @ViewData["ReportPeriod"]</small>
+    </p>
+}
+
+@section Actions {
+    <a href="/Dashboard/Print" class="btn btn-outline-secondary btn-sm">🖨 Печать</a>
+}
+
+@{
+    int i = 0;
+}
+<div class="row">
+    @foreach (var card in Model)
+    {
+        if (i > 0 && i % 3 == 0)
+        {
+            @:</div><div class="row">
+        }
+        <div class="col-md-4">
+            @if (i % 2 == 0)
+            {
+                @await Html.PartialAsync("_DashboardCard", card)
+            }
+            else
+            {
+                @renderCard(card)
+            }
+        </div>
+        i++;
+    }
+</div>
+
+<hr />
+<div class="alert alert-info">
+    <strong>Всего карточек:</strong> @cardCount<br />
+    <strong>Сумма значений:</strong> @totalValue @ViewBag.Currency<br />
+    <strong>Среднее значение:</strong> @GetAverage(Model)
+</div>

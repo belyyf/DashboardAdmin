@@ -1,0 +1,21 @@
+﻿@model List<DashboardAdmin.ViewComponents.TrendSummaryItem>
+
+<h5>Сводка по трендам</h5>
+
+@if (!Model.Any())
+{
+    <p class="text-muted">Нет данных</p>
+}
+else
+{
+    <ul class="list-group list-group-flush">
+        @foreach (var item in Model)
+        {
+            <li class="list-group-item">
+                <strong>@item.Trend</strong><br />
+                Карточек: @item.Count<br />
+                Сумма: @item.Total
+            </li>
+        }
+    </ul>
+}

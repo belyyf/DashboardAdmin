@@ -1,0 +1,4 @@
+﻿@{
+    var mode = ViewData["Mode"] as string;
+    Layout = mode == "Print" ? "_PrintLayout" : "_AppLayout";
+}

@@ -1,0 +1,24 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+@section PageHeader {
+    @await RenderSectionAsync("PageHeader", required: false)
+}
+
+@section Actions {
+    @await RenderSectionAsync("Actions", required: false)
+}
+
+<div class="row">
+    <div class="col-md-9">
+        @RenderBody()
+    </div>
+    <aside class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                @await Component.InvokeAsync("TrendSummary")
+            </div>
+        </div>
+    </aside>
+</div>
